@@ -145,7 +145,7 @@ order by
 
 --4) Find the day with the highest revenue 
 SELECT
-	SUM(p.price * oi.quantity) as revenue, o.order_date, P.product_name
+	SUM(p.price * oi.quantity) as revenue, o.order_date
 from
 	products p
 inner join
@@ -153,7 +153,7 @@ inner join
 inner join
 	orders as o using(order_id)
 group by
-	p.product_name
+	o.order_date
 order by
 	revenue desc
 LIMIT 1;
@@ -284,7 +284,7 @@ order by order_type_total DESC;
 
 --10) Find customers who have ordered the product with the highest price.
 select 
-	(c.first_name||' '||c.last_name) as full_name, p.product_name, max(p.price) as most_expensive_product
+	(c.first_name||' '||c.last_name) as full_name, p.product_name, p.price
 from 
 	customers c
 inner join 
@@ -292,6 +292,7 @@ inner join
 inner join 
 	order_items oi using (order_id)
 inner join 
-	products p using (product_id);
-
+	products p using (product_id)
+where
+	p.price=(select max(price) from products);
 
